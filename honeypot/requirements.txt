@@ -1,0 +1,2 @@
+paramiko
+psycopg2-binary
