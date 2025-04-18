@@ -12,6 +12,8 @@ services:
       - DB_PORT=${DB_PORT}
     ports:
       - "22:22"
+    depends_on:
+      - database
     networks:
       - honeypot_network
     restart: unless-stopped
@@ -24,6 +26,11 @@ services:
       POSTGRES_DB: ${DB_NAME}
     volumes:
       - ./db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
       - honeypot_network
     restart: unless-stopped
