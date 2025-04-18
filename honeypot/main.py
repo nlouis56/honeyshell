@@ -58,8 +58,6 @@ MOTD = [
 ]
 
 HOST_KEY = paramiko.RSAKey(filename='server.key')
-BANNERS = ["Welcome!", "Hello, world!", "SSH Honeypot"]
-MOTD = ["Enjoy your stay", "Have a great day"]
 
 class HoneypotDatabase:
     def __init__(self):
@@ -127,6 +125,8 @@ class HoneypotSSHServer(paramiko.ServerInterface):
 
     def check_auth_password(self, username, password):
         logging.info("Password auth attempt - Username: %s | Password: %s", username, password)
+        randSleep: float = random.uniform(0.5, 1.5)  # Random sleep between 0.1 and 0.5 seconds
+        time.sleep(randSleep)
         if random.randint(0, 10) < 3:
             result = "success"
             auth_status = paramiko.AUTH_SUCCESSFUL
@@ -202,6 +202,7 @@ def accept_channel(transport, addr, timeout=20):
         logging.warning("No channel was opened by %s:%d", addr[0], addr[1])
     return channel
 
+
 def simulate_console_interaction(channel: paramiko.Channel):
     """
     Simulates console interaction with the client.
@@ -224,6 +225,7 @@ def simulate_console_interaction(channel: paramiko.Channel):
         channel.close()
         logging.info("Channel closed")
 
+
 def handle_authenticated_channel(channel: paramiko.Channel, addr):
     """
     Handles the authenticated channel by sending the message-of-the-day.
@@ -245,6 +247,7 @@ def handle_authenticated_channel(channel: paramiko.Channel, addr):
         if channel:
             channel.close()
         logging.info("Channel closed for %s:%d", addr[0], addr[1])
+
 
 def process_connection(client, addr, db, rsa_key):
     """
@@ -272,6 +275,7 @@ def process_connection(client, addr, db, rsa_key):
     handle_authenticated_channel(channel, addr)
     transport.close()
 
+
 def generate_rsa_key():
     """
     Generates a new RSA key pair and saves it to a file.
@@ -281,6 +285,7 @@ def generate_rsa_key():
         key.write_private_key(key_file)
     logging.info("Generated new RSA key with fingerprint: %s", key.get_fingerprint().hex())
     return key
+
 
 def start_honeypot_server(host='0.0.0.0', port=22):
     """
@@ -310,7 +315,4 @@ def start_honeypot_server(host='0.0.0.0', port=22):
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
-    start_honeypot_server()
-
-if __name__ == '__main__':
     start_honeypot_server(port=2222)

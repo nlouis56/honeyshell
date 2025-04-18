@@ -14,6 +14,7 @@ services:
       - "22:22"
     networks:
       - honeypot_network
+    restart: unless-stopped
   database:
     container_name: honeyshell_db
     image: postgres:latest
@@ -25,6 +26,7 @@ services:
       - db_data:/var/lib/postgresql/data
     networks:
       - honeypot_network
+    restart: unless-stopped
 
 networks:
   honeypot_network:
