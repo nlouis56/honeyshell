@@ -57,8 +57,6 @@ MOTD = [
     "Welcome to openSUSE Leap 42.3",
 ]
 
-HOST_KEY = paramiko.RSAKey(filename='server.key')
-
 class HoneypotDatabase:
     def __init__(self):
         self.connection = psycopg2.connect(
