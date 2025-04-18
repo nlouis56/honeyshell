@@ -13,7 +13,8 @@ services:
     ports:
       - "22:22"
     depends_on:
-      - database
+      database:
+        condition: service_healthy
     networks:
       - honeypot_network
     restart: unless-stopped

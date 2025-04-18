@@ -59,12 +59,25 @@ MOTD = [
 
 class HoneypotDatabase:
     def __init__(self):
+        dbname=os.environ.get("DB_NAME", "honeypot"),
+        user=os.environ.get("DB_USER", "user"),
+        password=os.environ.get("DB_PASSWORD", "password"),
+        host=os.environ.get("DB_HOST", "localhost"),
+        port=os.environ.get("DB_PORT", "5432")
+
+        print("Trying to connect with credentials:")
+        print(dbname)
+        print(user)
+        print(password)
+        print(host)
+        print(port)
+
         self.connection = psycopg2.connect(
-            dbname=os.environ.get("DB_NAME", "honeypot"),
-            user=os.environ.get("DB_USER", "user"),
-            password=os.environ.get("DB_PASSWORD", "password"),
-            host=os.environ.get("DB_HOST", "localhost"),
-            port=os.environ.get("DB_PORT", "5432")
+            dbname=dbname,
+            user=user,
+            password=password,
+            host=host,
+            port=port,
         )
         self.cursor = self.connection.cursor()
         self.create_tables()
