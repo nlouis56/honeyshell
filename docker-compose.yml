@@ -10,6 +10,7 @@ services:
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_HOST=${DB_HOST}
       - DB_PORT=${DB_PORT}
+      - LOGGING_LEVEL=${LOGGING_LEVEL}
     ports:
       - "22:22"
     depends_on:
@@ -32,6 +33,25 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - honeypot_network
+    restart: unless-stopped
+  visualizer:
+    container_name: honeyshell_visualizer
+    build:
+      context: ./visualizer
+      dockerfile: Dockerfile
+    environment:
+      - DB_USER=${DB_USER}
+      - DB_NAME=${DB_NAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+    ports:
+      - "8080:8000"
+    depends_on:
+      database:
+        condition: service_healthy
     networks:
       - honeypot_network
     restart: unless-stopped
